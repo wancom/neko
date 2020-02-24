@@ -47,9 +47,12 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,jsx,vue}": [
+    "*.{jsx,vue}": [
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "vue":{
+    "publicPath": "/neko/"
   }
 }
