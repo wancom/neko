@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <Neko
-      ref="neko"
+      v-for="i in 5"
+      :key="i"
+      :ref="'neko' + i"
       @mouseenter="
         () => {
-          randomWalk(setRandomWalk);
+          randomWalk(i, setRandomWalk);
         }
       "
     />
@@ -21,28 +23,37 @@ export default {
   },
   data() {
     return {
-      randtimer: null
+      randtimer: [null]
     };
   },
   mounted() {
-    this.setRandomWalk();
+    for (var i = 1; i <= Object.keys(this.$refs).length; i++) {
+      this.randtimer.push(null);
+      this.$refs["neko" + i][0].x =
+        Math.floor(Math.random() * (window.innerWidth - 100)) + 50;
+      this.$refs["neko" + i][0].y =
+        Math.floor(Math.random() * (window.innerHeight - 100)) + 50;
+      this.setRandomWalk(i);
+    }
   },
   methods: {
-    randomWalk(callback) {
-      clearTimeout(this.randtimer);
-
+    randomWalk(i, callback) {
+      clearTimeout(this.randtimer[i]);
       const x = Math.floor(Math.random() * window.innerWidth);
       const y = Math.floor(Math.random() * window.innerHeight);
-      this.$refs.neko.walkToTarget(x, y, callback);
+      this.$refs["neko" + i][0].walkToTarget(x, y, () => {
+        callback(i);
+      });
     },
-    setRandomWalk() {
-      clearTimeout(this.randtimer);
+    setRandomWalk(i) {
+      clearTimeout(this.randtimer[i]);
       const self = this;
-      const ms = Math.floor(Math.random() * 5) * 1000;
-      console.log(ms);
-      if (ms == 0) return;
-      this.randtimer = setTimeout(() => {
-        this.randomWalk(self.setRandomWalk);
+      var ms = Math.floor(Math.random() * 50) * 100;
+      if (ms == 0) {
+        ms = 60 * 1000;
+      }
+      this.randtimer[i] = setTimeout(() => {
+        self.randomWalk(i, self.setRandomWalk);
       }, ms);
     }
   }

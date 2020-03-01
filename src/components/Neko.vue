@@ -44,17 +44,17 @@
 export default {
   name: "Neko",
   props: {
-    ix: Number,
-    iy: Number
+    ix: String,
+    iy: String
   },
   data() {
     return {
       walking: 1,
       status: 0,
-      x: this.ix | (window.innerWidth / 2),
-      y: this.ix | (window.innerHeight / 2),
-      targetx: this.ix | (window.innerWidth / 2),
-      targety: this.ix | (window.innerHeight / 2),
+      x: parseInt(this.ix) || window.innerWidth / 2,
+      y: parseInt(this.iy) || window.innerHeight / 2,
+      targetx: parseInt(this.ix) | (window.innerWidth / 2),
+      targety: parseInt(this.iy) | (window.innerHeight / 2),
       walktimer: null,
       sittimer: null,
       walkcount: 0
