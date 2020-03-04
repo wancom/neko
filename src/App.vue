@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Neko
-      v-for="i in 5"
+      v-for="i in num_cat"
       :key="i"
       :ref="'neko' + i"
       @mouseenter="
@@ -15,6 +15,7 @@
 
 <script>
 import Neko from "./components/Neko.vue";
+const MAX_NUM_CAT = 10;
 
 export default {
   name: "App",
@@ -23,8 +24,12 @@ export default {
   },
   data() {
     return {
-      randtimer: [null]
+      randtimer: [null],
+      num_cat: 0
     };
+  },
+  created() {
+    this.num_cat = Math.floor(Math.random() * Math.floor(MAX_NUM_CAT)) + 1;
   },
   mounted() {
     for (var i = 1; i <= Object.keys(this.$refs).length; i++) {

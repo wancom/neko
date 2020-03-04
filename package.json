@@ -52,7 +52,7 @@
       "git add"
     ]
   },
-  "vue":{
+  "vue": {
     "publicPath": "/neko/"
   }
 }
