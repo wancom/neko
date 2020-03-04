@@ -53,6 +53,7 @@
     ]
   },
   "vue": {
-    "publicPath": "/neko/"
+    "publicPath": "/neko/",
+    "outputDir": "docs"
   }
 }
