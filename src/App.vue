@@ -54,7 +54,7 @@ export default {
       clearTimeout(this.randtimer[i]);
       const self = this;
       var ms = Math.floor(Math.random() * 50) * 100;
-      if (ms == 0) {
+      if (ms > 4000) {
         ms = 60 * 1000;
       }
       this.randtimer[i] = setTimeout(() => {
