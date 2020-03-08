@@ -2,7 +2,10 @@
   <div class="nekojarashi-field" @mousemove="nekojarashi">
     <div
       class="nekojarashi-cover"
-      @mousedown="isGrabbing = !isGrabbing"
+      @mousedown="
+        isGrabbing = !isGrabbing;
+        $emit('grab', isGrabbing);
+      "
       ref="nekojarashi"
     >
       <img
@@ -19,14 +22,17 @@ export default {
   data() {
     return {
       isGrabbing: false,
-      NJx: window.innerWidth - 10,
-      NJy: window.innerHeight - 10,
+      NJx: window.innerWidth - 50,
+      NJy: window.innerHeight - 50,
       toId: null,
       isShaking: false
     };
   },
   mounted() {
     this.shake();
+    this.$refs["nekojarashi"].style.top = this.NJy + "px";
+    this.$refs["nekojarashi"].style.left = this.NJx + "px";
+    this.$emit("nekojarashi", [this.NJx, this.NJy]);
   },
   methods: {
     nekojarashi(e) {
@@ -37,7 +43,7 @@ export default {
         this.$refs["nekojarashi"].style.left = this.NJx + "px";
         this.$emit("nekojarashi", [this.NJx, this.NJy]);
       }
-      this.$emit("grab", this.isGrabbing);
+      // this.$emit("grab", this.isGrabbing);
     },
     shake() {
       clearTimeout(this.toId);

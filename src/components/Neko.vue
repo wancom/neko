@@ -1,6 +1,6 @@
 <template>
   <div class="neko">
-    <div v-if="status == STATUS_SIT" @mouseenter="$emit('mouseenter')">
+    <div v-if="status == 0" @mouseenter="$emit('mouseenter')">
       <img
         alt="catsit"
         src="../assets/sit.png"
@@ -8,7 +8,7 @@
       />
     </div>
 
-    <div v-if="status == STATUS_STAND" @mouseenter="$emit('mouseenter')">
+    <div v-if="status == 1" @mouseenter="$emit('mouseenter')">
       <img
         alt="catwalk2"
         src="../assets/walk3.png"
@@ -18,7 +18,7 @@
         }"
       />
     </div>
-    <div v-if="status == STATUS_WALK">
+    <div v-if="status == 2">
       <img
         :alt="'catwalk' + String(walking)"
         :src="require('../assets/walk' + String(walking) + '.png')"
@@ -71,7 +71,8 @@ export default {
   methods: {
     walk(callback) {
       if (this.status == STATUS_WALK) {
-        return;
+        // return;
+        clearInterval(this.walktimer);
       }
       clearInterval(this.sittimer);
       const self = this;

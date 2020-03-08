@@ -17,7 +17,10 @@
           NJy = e[1];
         }
       "
-      @grab="isGrabbing = $event"
+      @grab="
+        isGrabbing = $event;
+        nekojarashiGrab();
+      "
     />
   </div>
 </template>
@@ -82,11 +85,20 @@ export default {
         self.randomWalk(i, self.walkSwitch);
       }, ms);
     },
+    nekojarashiGrab() {
+      for (var i = 1; i <= Object.keys(this.$refs).length; i++) {
+        this.walkSwitch(i);
+      }
+    },
     nekojarashiWalk(i, callback) {
       clearTimeout(this.randtimer[i]);
+      if (!this.isGrabbing) return;
       this.$refs["neko" + i][0].walkToTarget(this.NJx, this.NJy, () => {
         callback(i);
       });
+      this.randtimer[i] = setTimeout(() => {
+        this.nekojarashiWalk(i, callback);
+      }, 200);
     },
     setNekojarashiWalk(i) {
       clearTimeout(this.randtimer[i]);
