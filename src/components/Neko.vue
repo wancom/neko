@@ -1,6 +1,6 @@
 <template>
   <div class="neko">
-    <div v-if="status == 0" @mouseenter="$emit('mouseenter')">
+    <div v-if="status == STATUS_SIT" @mouseenter="$emit('mouseenter')">
       <img
         alt="catsit"
         src="../assets/sit.png"
@@ -8,7 +8,7 @@
       />
     </div>
 
-    <div v-if="status == 1" @mouseenter="$emit('mouseenter')">
+    <div v-if="status == STATUS_STAND" @mouseenter="$emit('mouseenter')">
       <img
         alt="catwalk2"
         src="../assets/walk3.png"
@@ -18,7 +18,7 @@
         }"
       />
     </div>
-    <div v-if="status == 2">
+    <div v-if="status == STATUS_WALK">
       <img
         :alt="'catwalk' + String(walking)"
         :src="require('../assets/walk' + String(walking) + '.png')"
@@ -38,9 +38,10 @@
 </template>
 
 <script>
-// 0: sit
-// 1: stand
-// 2: walk
+const STATUS_SIT = 0;
+const STATUS_STAND = 1;
+const STATUS_WALK = 2;
+
 export default {
   name: "Neko",
   props: {
@@ -50,7 +51,7 @@ export default {
   data() {
     return {
       walking: 1,
-      status: 0,
+      status: STATUS_SIT,
       x: parseInt(this.ix) || window.innerWidth / 2,
       y: parseInt(this.iy) || window.innerHeight / 2,
       targetx: parseInt(this.ix) | (window.innerWidth / 2),
@@ -69,12 +70,12 @@ export default {
   },
   methods: {
     walk(callback) {
-      if (this.status == 2) {
+      if (this.status == STATUS_WALK) {
         return;
       }
       clearInterval(this.sittimer);
       const self = this;
-      this.status = 2;
+      this.status = STATUS_WALK;
 
       this.walktimer = setInterval(() => {
         if (
@@ -82,7 +83,7 @@ export default {
           Math.abs(self.targety - self.y) < 3
         ) {
           clearInterval(self.walktimer);
-          self.status = 1;
+          self.status = STATUS_STAND;
           self.sittimer = setTimeout(() => {
             self.sit();
           }, 5000);
@@ -111,10 +112,10 @@ export default {
       this.walk(callback);
     },
     sit() {
-      if (this.status == 2) {
+      if (this.status == STATUS_WALK) {
         clearInterval(this.walktimer);
       }
-      this.status = 0;
+      this.status = STATUS_SIT;
     },
     getAngle() {
       const dx = this.targetx - this.x;
