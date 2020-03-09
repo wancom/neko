@@ -6,21 +6,18 @@
       :ref="'neko' + i"
       @mouseenter="
         () => {
-          randomWalk(i, setRandomWalk);
+          randomWalk(i);
         }
       "
     />
     <Nekojarashi
-      @nekojarashi="
+      @njmove="
         e => {
           NJx = e[0];
           NJy = e[1];
         }
       "
-      @grab="
-        isGrabbing = $event;
-        nekojarashiGrab();
-      "
+      @grab="njGrab"
     />
   </div>
 </template>
@@ -55,58 +52,52 @@ export default {
         Math.floor(Math.random() * (window.innerWidth - 100)) + 50;
       this.$refs["neko" + i][0].y =
         Math.floor(Math.random() * (window.innerHeight - 100)) + 50;
-      this.setRandomWalk(i);
+      this.randomWalk(i);
     }
   },
   methods: {
-    walkSwitch(i) {
-      if (this.isGrabbing) {
-        this.nekojarashiWalk(i, this.setNekojarashiWalk);
-      } else {
-        this.randomWalk(i, this.setRandomWalk);
-      }
-    },
-    randomWalk(i, callback) {
+    randomWalk(i) {
       clearTimeout(this.randtimer[i]);
+      // Do random walk
+      const self = this;
       const x = Math.floor(Math.random() * window.innerWidth);
       const y = Math.floor(Math.random() * window.innerHeight);
       this.$refs["neko" + i][0].walkToTarget(x, y, () => {
-        callback(i);
+        // Set timer for next random walk
+        var ms = Math.floor(Math.random() * 50) * 100;
+        if (ms > 4000) {
+          ms = 60 * 1000;
+        }
+        self.randtimer[i] = setTimeout(() => {
+          self.randomWalk(i);
+        }, ms);
       });
     },
-    setRandomWalk(i) {
-      clearTimeout(this.randtimer[i]);
-      const self = this;
-      var ms = Math.floor(Math.random() * 50) * 100;
-      if (ms > 4000) {
-        ms = 60 * 1000;
-      }
-      this.randtimer[i] = setTimeout(() => {
-        self.randomWalk(i, self.walkSwitch);
-      }, ms);
-    },
-    nekojarashiGrab() {
+    njGrab(isGrab) {
+      this.isGrabbing = isGrab;
       for (var i = 1; i <= Object.keys(this.$refs).length; i++) {
-        this.walkSwitch(i);
+        if (this.isGrabbing) {
+          this.nekojarashiWalk(i, this.setNekojarashiWalk);
+        } else {
+          this.randomWalk(i);
+        }
       }
     },
-    nekojarashiWalk(i, callback) {
+    nekojarashiWalk(i) {
       clearTimeout(this.randtimer[i]);
       if (!this.isGrabbing) return;
-      this.$refs["neko" + i][0].walkToTarget(this.NJx, this.NJy, () => {
-        callback(i);
-      });
-      this.randtimer[i] = setTimeout(() => {
-        this.nekojarashiWalk(i, callback);
-      }, 200);
-    },
-    setNekojarashiWalk(i) {
-      clearTimeout(this.randtimer[i]);
       const self = this;
-      const ms = 1000;
+      // Move to nj
+      this.$refs["neko" + i][0].walkToTarget(this.NJx, this.NJy, () => {
+        clearTimeout(this.randtimer[i]);
+        self.randtimer[i] = setTimeout(() => {
+          self.randomWalk(i);
+        }, 1000);
+      });
+      // Check terget again
       this.randtimer[i] = setTimeout(() => {
-        self.randomWalk(i, self.walkSwitch);
-      }, ms);
+        self.nekojarashiWalk(i);
+      }, 200);
     }
   }
 };
