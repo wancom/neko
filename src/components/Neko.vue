@@ -27,7 +27,7 @@
           top: y - 50 + 'px',
           transform:
             'rotate(' +
-            getAngle() +
+            (Math.atan((targety - y) / (targetx - x)) * 180) / Math.PI +
             'deg) rotateY(' +
             (targetx - x < 0 ? 0 : 180) +
             'deg)'
@@ -90,12 +90,11 @@ export default {
           if (callback) callback();
         }
 
-        const rad = Math.atan(dy / dx);
+        const rad = Math.abs(Math.atan(dy / dx));
         if (dx != 0)
-          self.x += Math.cos(rad) * (dx / Math.abs(dx)) * this.walkspeed;
+          self.x += Math.cos(rad) * (dx < 0 ? -1 : 1) * this.walkspeed;
         if (dy != 0)
-          self.y +=
-            Math.sin(Math.abs(rad)) * (dy / Math.abs(dy)) * this.walkspeed;
+          self.y += Math.sin(rad) * (dy < 0 ? -1 : 1) * this.walkspeed;
         if (self.walkcount + 1 < this.walkspeed * NUM_OF_PICT)
           self.walkcount += 1;
         else self.walkcount = 0;
@@ -111,14 +110,6 @@ export default {
         clearInterval(this.walktimer);
       }
       this.status = STATUS_SIT;
-    },
-    getAngle() {
-      const dx = this.targetx - this.x;
-      const dy = this.targety - this.y;
-      const rad = Math.atan(dy / dx);
-      const deg = (rad * 180) / Math.PI;
-      if (deg < 90) return deg;
-      else return 180 - deg;
     }
   }
 };
