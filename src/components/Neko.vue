@@ -1,37 +1,26 @@
 <template>
   <div class="neko">
     <div v-if="status == 0" @mouseenter="$emit('mouseenter')">
-      <img
-        alt="catsit"
-        src="../assets/sit.png"
-        :style="{ left: x - 50 + 'px', top: y - 50 + 'px' }"
-      />
+      <img alt="catsit" src="../assets/sit.png" :style="stylePosition" />
     </div>
 
     <div v-if="status == 1" @mouseenter="$emit('mouseenter')">
-      <img
-        alt="catwalk2"
-        src="../assets/walk3.png"
-        :style="{
-          left: x - 50 + 'px',
-          top: y - 50 + 'px'
-        }"
-      />
+      <img alt="catwalk3" src="../assets/walk3.png" :style="stylePosition" />
     </div>
     <div v-if="status == 2">
       <img
-        :alt="'catwalk' + String(walking)"
+        :alt="'cat' + walkPicName"
         :src="require('../assets/' + walkPicName + '.png')"
-        :style="{
-          left: x - 50 + 'px',
-          top: y - 50 + 'px',
-          transform:
-            'rotate(' +
-            (Math.atan((targety - y) / (targetx - x)) * 180) / Math.PI +
-            'deg) rotateY(' +
-            (targetx - x < 0 ? 0 : 180) +
-            'deg)'
-        }"
+        :style="
+          Object.assign(stylePosition, {
+            transform:
+              'rotate(' +
+              (Math.atan((targety - y) / (targetx - x)) * 180) / Math.PI +
+              'deg) rotateY(' +
+              (targetx - x < 0 ? 0 : 180) +
+              'deg)'
+          })
+        "
       />
     </div>
   </div>
@@ -50,21 +39,23 @@ export default {
   },
   data() {
     return {
-      walking: 1,
-      status: STATUS_SIT,
       x: parseInt(this.ix) || window.innerWidth / 2,
       y: parseInt(this.iy) || window.innerHeight / 2,
+      status: STATUS_SIT,
+      walkspeed: 3,
+      walkcount: 0,
       targetx: parseInt(this.ix) | (window.innerWidth / 2),
       targety: parseInt(this.iy) | (window.innerHeight / 2),
       walktimer: null,
-      sittimer: null,
-      walkcount: 0,
-      walkspeed: 3
+      sittimer: null
     };
   },
   computed: {
     walkPicName() {
       return "walk" + String(Math.floor(this.walkcount / this.walkspeed) + 1);
+    },
+    stylePosition() {
+      return { left: this.x - 50 + "px", top: this.y - 50 + "px" };
     }
   },
   methods: {
