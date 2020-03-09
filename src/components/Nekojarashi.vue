@@ -41,6 +41,7 @@ export default {
       if (this.isGrabbing) {
         this.$emit("njmove", [this.NJx, this.NJy]);
       }
+      this.shake();
     },
     njmove(e) {
       if (this.isGrabbing) {
@@ -51,12 +52,12 @@ export default {
     },
     shake() {
       clearTimeout(this.toId);
-      if (this.isShaking) {
-        this.toId = setTimeout(this.shake, 250);
-      } else {
-        this.toId = setTimeout(this.shake, 2000);
-      }
       this.isShaking = !this.isShaking;
+      if (this.isShaking && !this.isGrabbing) {
+        this.toId = setTimeout(this.shake, 2000);
+      } else {
+        this.toId = setTimeout(this.shake, 250);
+      }
     }
   }
 };
