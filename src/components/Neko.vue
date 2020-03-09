@@ -21,7 +21,7 @@
     <div v-if="status == 2">
       <img
         :alt="'catwalk' + String(walking)"
-        :src="require('../assets/walk' + String(walking) + '.png')"
+        :src="require('../assets/' + walkPicName + '.png')"
         :style="{
           left: x - 50 + 'px',
           top: y - 50 + 'px',
@@ -41,7 +41,7 @@
 const STATUS_SIT = 0;
 const STATUS_STAND = 1;
 const STATUS_WALK = 2;
-
+const NUM_OF_PICT = 8;
 export default {
   name: "Neko",
   props: {
@@ -58,8 +58,14 @@ export default {
       targety: parseInt(this.iy) | (window.innerHeight / 2),
       walktimer: null,
       sittimer: null,
-      walkcount: 0
+      walkcount: 0,
+      walkspeed: 5
     };
+  },
+  computed: {
+    walkPicName() {
+      return "walk" + String(Math.floor(this.walkcount / this.walkspeed) + 1);
+    }
   },
   mounted() {
     // document
@@ -97,14 +103,9 @@ export default {
         if (dx != 0) self.x += Math.cos(rad) * r * (dx / Math.abs(dx));
         if (dy != 0)
           self.y += Math.sin(Math.abs(rad)) * r * (dy / Math.abs(dy));
-        self.walkcount += 1;
-        if (self.walkcount == 5) {
-          self.walkcount = 0;
-          self.walking += 1;
-          if (self.walking == 9) {
-            self.walking = 1;
-          }
-        }
+        if (self.walkcount + 1 < this.walkspeed * NUM_OF_PICT)
+          self.walkcount += 1;
+        else self.walkcount = 0;
       }, 50);
     },
     walkToTarget(x, y, callback) {
