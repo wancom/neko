@@ -4,7 +4,7 @@
       <img
         alt="catsit"
         src="../assets/sit.png"
-        :style="{ left: x - 50 + 'px', top: y - 50 + 15 + 'px' }"
+        :style="{ left: x - 50 + 'px', top: y - 50 + 'px' }"
       />
     </div>
 
