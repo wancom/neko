@@ -1,8 +1,10 @@
 <template>
-  <div class="nekojarashi-field" @mousemove="njmove">
+  <div class="nekojarashi-field" @mousemove="njmove" @touchmove="njmove">
     <div
       class="nekojarashi-cover"
       @mousedown="grabChanged(!isGrabbing)"
+      @touchstart.prevent="grabChanged(true)"
+      @touchend="grabChanged(false)"
       ref="nekojarashi"
       :style="{
         left: this.NJx - 25 + 'px',
@@ -45,8 +47,8 @@ export default {
     },
     njmove(e) {
       if (this.isGrabbing) {
-        this.NJx = e.x;
-        this.NJy = e.y;
+        this.NJx = e.pageX;
+        this.NJy = e.pageY;
         this.$emit("njmove", [this.NJx, this.NJy]);
       }
     },
@@ -87,5 +89,6 @@ export default {
   height: 50px;
   z-index: -1;
   user-select: none;
+  -webkit-touch-callout: none;
 }
 </style>
