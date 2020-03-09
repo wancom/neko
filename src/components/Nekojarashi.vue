@@ -26,7 +26,7 @@ export default {
       isGrabbing: false,
       NJx: window.innerWidth - 50,
       NJy: window.innerHeight - 50,
-      toId: null,
+      shakeTimer: null,
       isShaking: false
     };
   },
@@ -51,12 +51,12 @@ export default {
       }
     },
     shake() {
-      clearTimeout(this.toId);
+      clearTimeout(this.shakeTimer);
       this.isShaking = !this.isShaking;
       if (this.isShaking && !this.isGrabbing) {
-        this.toId = setTimeout(this.shake, 2000);
+        this.shakeTimer = setTimeout(this.shake, 2000);
       } else {
-        this.toId = setTimeout(this.shake, 250);
+        this.shakeTimer = setTimeout(this.shake, 250);
       }
     }
   }
