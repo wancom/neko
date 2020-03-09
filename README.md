@@ -1,5 +1,7 @@
 # neko
 
+[Enjoy playing with neko! (cat)](https://wancom.github.io/neko/)
+
 ## Project setup
 ```
 npm install
