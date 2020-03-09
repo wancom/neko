@@ -11,7 +11,7 @@
       "
     />
     <Nekojarashi
-      @nekojarashi="
+      @njmove="
         e => {
           NJx = e[0];
           NJy = e[1];

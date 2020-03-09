@@ -1,12 +1,14 @@
 <template>
-  <div class="nekojarashi-field" @mousemove="nekojarashi">
+  <div class="nekojarashi-field" @mousemove="njmove">
     <div
       class="nekojarashi-cover"
-      @mousedown="
-        isGrabbing = !isGrabbing;
-        $emit('grab', isGrabbing);
-      "
+      @mousedown="grabChanged(!isGrabbing)"
       ref="nekojarashi"
+      :style="{
+        left: this.NJx - 25 + 'px',
+        top: this.NJy - 25 + 'px',
+        transform: isShaking ? 'rotate(5deg)' : 'rotate(-5deg)'
+      }"
     >
       <img
         class="nekojarashi-img"
@@ -30,28 +32,28 @@ export default {
   },
   mounted() {
     this.shake();
-    this.$refs["nekojarashi"].style.top = this.NJy + "px";
-    this.$refs["nekojarashi"].style.left = this.NJx + "px";
     this.$emit("nekojarashi", [this.NJx, this.NJy]);
   },
   methods: {
-    nekojarashi(e) {
+    grabChanged(isGrab) {
+      this.isGrabbing = isGrab;
+      this.$emit("grab", this.isGrabbing);
+      if (this.isGrabbing) {
+        this.$emit("njmove", [this.NJx, this.NJy]);
+      }
+    },
+    njmove(e) {
       if (this.isGrabbing) {
         this.NJx = e.x;
         this.NJy = e.y;
-        this.$refs["nekojarashi"].style.top = this.NJy - 25 + "px";
-        this.$refs["nekojarashi"].style.left = this.NJx - 25 + "px";
-        this.$emit("nekojarashi", [this.NJx, this.NJy]);
+        this.$emit("njmove", [this.NJx, this.NJy]);
       }
-      // this.$emit("grab", this.isGrabbing);
     },
     shake() {
       clearTimeout(this.toId);
       if (this.isShaking) {
-        this.$refs["nekojarashi"].style.transform = "rotate(5deg)";
         this.toId = setTimeout(this.shake, 250);
       } else {
-        this.$refs["nekojarashi"].style.transform = "rotate(-5deg)";
         this.toId = setTimeout(this.shake, 2000);
       }
       this.isShaking = !this.isShaking;
