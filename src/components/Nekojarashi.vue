@@ -37,10 +37,10 @@ export default {
   methods: {
     nekojarashi(e) {
       if (this.isGrabbing) {
-        this.NJx = e.x - 20;
-        this.NJy = e.y - 20;
-        this.$refs["nekojarashi"].style.top = this.NJy + "px";
-        this.$refs["nekojarashi"].style.left = this.NJx + "px";
+        this.NJx = e.x;
+        this.NJy = e.y;
+        this.$refs["nekojarashi"].style.top = this.NJy - 25 + "px";
+        this.$refs["nekojarashi"].style.left = this.NJx - 25 + "px";
         this.$emit("nekojarashi", [this.NJx, this.NJy]);
       }
       // this.$emit("grab", this.isGrabbing);
