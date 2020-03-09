@@ -59,7 +59,7 @@ export default {
       walktimer: null,
       sittimer: null,
       walkcount: 0,
-      walkspeed: 5
+      walkspeed: 3
     };
   },
   computed: {
@@ -67,17 +67,9 @@ export default {
       return "walk" + String(Math.floor(this.walkcount / this.walkspeed) + 1);
     }
   },
-  mounted() {
-    // document
-    //   .getElementsByTagName("body")[0]
-    //   .addEventListener("mousedown", e => {
-    //     this.walkToTarget(e.clientX, e.clientY);
-    //   });
-  },
   methods: {
     walk(callback) {
       if (this.status == STATUS_WALK) {
-        // return;
         clearInterval(this.walktimer);
       }
       clearInterval(this.sittimer);
@@ -85,10 +77,11 @@ export default {
       this.status = STATUS_WALK;
 
       this.walktimer = setInterval(() => {
-        if (
-          Math.abs(self.targetx - self.x) < 3 &&
-          Math.abs(self.targety - self.y) < 3
-        ) {
+        const dx = self.targetx - self.x;
+        const dy = self.targety - self.y;
+
+        if (dx ** 2 + dy ** 2 < this.walkspeed) {
+          // Reach terget position
           clearInterval(self.walktimer);
           self.status = STATUS_STAND;
           self.sittimer = setTimeout(() => {
@@ -96,13 +89,13 @@ export default {
           }, 5000);
           if (callback) callback();
         }
-        const dx = self.targetx - self.x;
-        const dy = self.targety - self.y;
+
         const rad = Math.atan(dy / dx);
-        const r = 3;
-        if (dx != 0) self.x += Math.cos(rad) * r * (dx / Math.abs(dx));
+        if (dx != 0)
+          self.x += Math.cos(rad) * (dx / Math.abs(dx)) * this.walkspeed;
         if (dy != 0)
-          self.y += Math.sin(Math.abs(rad)) * r * (dy / Math.abs(dy));
+          self.y +=
+            Math.sin(Math.abs(rad)) * (dy / Math.abs(dy)) * this.walkspeed;
         if (self.walkcount + 1 < this.walkspeed * NUM_OF_PICT)
           self.walkcount += 1;
         else self.walkcount = 0;
@@ -137,7 +130,5 @@ img {
   width: 100px;
   height: 100px;
   position: absolute;
-  /* top:320px;
-  left:200px; */
 }
 </style>
