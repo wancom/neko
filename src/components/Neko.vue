@@ -1,16 +1,20 @@
 <template>
   <div class="neko">
     <div v-if="status == 0" @mouseenter="$emit('mouseenter')">
-      <img alt="catsit" src="../assets/sit.png" :style="stylePosition" />
+      <img alt="catsit" :src="basePath + 'sit.png'" :style="stylePosition" />
     </div>
 
     <div v-if="status == 1" @mouseenter="$emit('mouseenter')">
-      <img alt="catwalk3" src="../assets/walk3.png" :style="stylePosition" />
+      <img
+        alt="catwalk3"
+        :src="basePath + 'walk3.png'"
+        :style="stylePosition"
+      />
     </div>
     <div v-if="status == 2">
       <img
         :alt="'cat' + walkPicName"
-        :src="require('../assets/' + walkPicName + '.png')"
+        :src="basePath + walkPicName + '.png'"
         :style="
           Object.assign(stylePosition, {
             transform:
@@ -43,6 +47,7 @@ export default {
       y: parseInt(this.iy) || window.innerHeight / 2,
       status: STATUS_SIT,
       walkspeed: 3,
+      catassets: "silhouette",
       walkcount: 0,
       targetx: parseInt(this.ix) | (window.innerWidth / 2),
       targety: parseInt(this.iy) | (window.innerHeight / 2),
@@ -51,6 +56,9 @@ export default {
     };
   },
   computed: {
+    basePath() {
+      return "./img/cat/" + this.catassets + "/";
+    },
     walkPicName() {
       return "walk" + String(Math.floor(this.walkcount / this.walkspeed) + 1);
     },

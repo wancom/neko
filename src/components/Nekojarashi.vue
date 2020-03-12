@@ -15,7 +15,7 @@
       <img
         class="nekojarashi-img"
         alt="nekojarashi"
-        src="../assets/nekojarashi.png"
+        src="../assets/items/nekojarashi.png"
       />
     </div>
   </div>
